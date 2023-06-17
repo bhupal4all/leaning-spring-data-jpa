@@ -2,13 +2,10 @@ package com.learning.ranga.entity;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.annotations.CollectionIdType;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -25,8 +22,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.MapKeyEnumerated;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -72,18 +71,24 @@ public class Person {
 	Contact self;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "NICKNAMES", joinColumns = @JoinColumn(name = "PID"))
+	@Column(name = "NICKNAMES", unique = true)
 	List<String> nickNames = new ArrayList<>();
 
+	@SuppressWarnings("rawtypes")
 	@ElementCollection(targetClass = Vehicle.class, fetch = FetchType.EAGER)
-	Collection vehicles = new LinkedList<>();
+	List vehicles = new ArrayList<>();
 
-	// type -> home, mobile, office
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "PHONE_NUM")
+	@CollectionTable(name = "PHONE_NUMBERS")
 	@MapKeyColumn(name = "TYPE")
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "NUMBER")
 	Map<PhoneType, String> phoneNumbers = new HashMap<>();
+
+	@OneToOne(orphanRemoval = true)
+	@JoinColumn(name = "EMPLOYMENT_ID", referencedColumnName = "id")
+	Employement work;
 
 //	public PersonId getId() {
 //		return id;
@@ -181,11 +186,13 @@ public class Person {
 		this.nickNames = nickNames;
 	}
 
-	public Collection getVehicles() {
+	@SuppressWarnings("rawtypes")
+	public List getVehicles() {
 		return vehicles;
 	}
 
-	public void setVehicles(Collection vehicles) {
+	@SuppressWarnings("rawtypes")
+	public void setVehicles(List vehicles) {
 		this.vehicles = vehicles;
 	}
 
@@ -195,6 +202,14 @@ public class Person {
 
 	public void setPhoneNumbers(Map<PhoneType, String> phoneNumbers) {
 		this.phoneNumbers = phoneNumbers;
+	}
+
+	public Employement getWork() {
+		return work;
+	}
+
+	public void setWork(Employement work) {
+		this.work = work;
 	}
 
 	@Override

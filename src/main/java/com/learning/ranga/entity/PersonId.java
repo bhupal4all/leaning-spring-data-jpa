@@ -8,6 +8,11 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class PersonId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4592461871703399886L;
+
 	@Column(nullable = false)
 	String firstName;
 
