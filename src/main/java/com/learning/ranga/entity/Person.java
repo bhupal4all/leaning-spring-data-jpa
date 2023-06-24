@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -66,41 +67,29 @@ public class Person {
 	@Transient
 	String creditCardNumber;
 
-	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "home", column = @Column(name = "HOME_NUMBER", length = 10)) })
-	Contact self;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "NICKNAMES", joinColumns = @JoinColumn(name = "PID"))
-	@Column(name = "NICKNAMES", unique = true)
-	List<String> nickNames = new ArrayList<>();
-
-	@SuppressWarnings("rawtypes")
-	@ElementCollection(targetClass = Vehicle.class, fetch = FetchType.EAGER)
-	List vehicles = new ArrayList<>();
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "PHONE_NUMBERS")
-	@MapKeyColumn(name = "TYPE")
-	@MapKeyEnumerated(EnumType.STRING)
-	@Column(name = "NUMBER")
-	Map<PhoneType, String> phoneNumbers = new HashMap<>();
-
-	@OneToOne(orphanRemoval = true)
-	@JoinColumn(name = "EMPLOYMENT_ID", referencedColumnName = "id")
-	Employement work;
-
-//	public PersonId getId() {
-//		return id;
-//	}
+//	@Embedded
+//	@AttributeOverrides({ @AttributeOverride(name = "home", column = @Column(name = "HOME_NUMBER", length = 10)) })
+//	Contact self;
 //
-//	public void setId(PersonId id) {
-//		this.id = id;
-//	}
+//	@ElementCollection(fetch = FetchType.EAGER)
+//	@CollectionTable(name = "NICKNAMES", joinColumns = @JoinColumn(name = "PID"))
+//	@Column(name = "NICKNAMES", unique = true)
+//	List<String> nickNames = new ArrayList<>();
+//
+//	@SuppressWarnings("rawtypes")
+//	@ElementCollection(targetClass = Vehicle.class, fetch = FetchType.EAGER)
+//	List vehicles = new ArrayList<>();
+//
+//	@ElementCollection(fetch = FetchType.EAGER)
+//	@CollectionTable(name = "PHONE_NUMBERS")
+//	@MapKeyColumn(name = "TYPE")
+//	@MapKeyEnumerated(EnumType.STRING)
+//	@Column(name = "NUMBER")
+//	Map<PhoneType, String> phoneNumbers = new HashMap<>();
 
-	public int getAge() {
-		return age;
-	}
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "EMP_ID", referencedColumnName = "id")
+	Employement work;
 
 	public Long getId() {
 		return id;
@@ -132,6 +121,10 @@ public class Person {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public int getAge() {
+		return age;
 	}
 
 	public void setAge(int age) {
@@ -170,40 +163,6 @@ public class Person {
 		this.creditCardNumber = creditCardNumber;
 	}
 
-	public Contact getSelf() {
-		return self;
-	}
-
-	public void setSelf(Contact self) {
-		this.self = self;
-	}
-
-	public List<String> getNickNames() {
-		return nickNames;
-	}
-
-	public void setNickNames(List<String> nickNames) {
-		this.nickNames = nickNames;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public List getVehicles() {
-		return vehicles;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public void setVehicles(List vehicles) {
-		this.vehicles = vehicles;
-	}
-
-	public Map<PhoneType, String> getPhoneNumbers() {
-		return phoneNumbers;
-	}
-
-	public void setPhoneNumbers(Map<PhoneType, String> phoneNumbers) {
-		this.phoneNumbers = phoneNumbers;
-	}
-
 	public Employement getWork() {
 		return work;
 	}
@@ -216,8 +175,7 @@ public class Person {
 	public String toString() {
 		return "Person [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", age=" + age + ", gender=" + gender + ", panNumber=" + panNumber + ", dob=" + dob
-				+ ", creditCardNumber=" + creditCardNumber + ", self=" + self + ", nickNames=" + nickNames
-				+ ", vehicles=" + vehicles + ", phoneNumbers=" + phoneNumbers + "]";
+				+ ", creditCardNumber=" + creditCardNumber + "]";
 	}
 
 }

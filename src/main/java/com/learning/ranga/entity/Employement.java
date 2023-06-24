@@ -34,7 +34,7 @@ public class Employement implements Serializable {
 
 	String state;
 
-	@OneToOne(mappedBy = "work", orphanRemoval = true)
+	@OneToOne(mappedBy = "work")
 	Person person;
 
 	public Employement() {
