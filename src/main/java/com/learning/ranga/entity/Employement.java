@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Transient;
 
 /**
  * @author ranga
@@ -34,7 +35,8 @@ public class Employement implements Serializable {
 
 	String state;
 
-	@OneToOne(mappedBy = "work")
+	@OneToOne(mappedBy = "work", optional = true)
+	@Transient
 	Person person;
 
 	public Employement() {

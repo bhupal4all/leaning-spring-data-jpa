@@ -1,21 +1,15 @@
 package com.learning.ranga.entity;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,8 +18,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapKeyColumn;
-import jakarta.persistence.MapKeyEnumerated;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -87,9 +81,8 @@ public class Person {
 //	@Column(name = "NUMBER")
 //	Map<PhoneType, String> phoneNumbers = new HashMap<>();
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "EMP_ID", referencedColumnName = "id")
-	Employement work;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
+	Set<Car> cars;
 
 	public Long getId() {
 		return id;
@@ -163,12 +156,12 @@ public class Person {
 		this.creditCardNumber = creditCardNumber;
 	}
 
-	public Employement getWork() {
-		return work;
+	public Set<Car> getCars() {
+		return cars;
 	}
 
-	public void setWork(Employement work) {
-		this.work = work;
+	public void setCars(Set<Car> cars) {
+		this.cars = cars;
 	}
 
 	@Override
