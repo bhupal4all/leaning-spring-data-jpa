@@ -45,9 +45,6 @@ public class Person {
 	@Column(unique = true)
 	String email;
 
-//	@EmbeddedId
-//	PersonId id;
-
 	int age;
 
 	@Enumerated(EnumType.STRING)
@@ -61,27 +58,12 @@ public class Person {
 	@Transient
 	String creditCardNumber;
 
-//	@Embedded
-//	@AttributeOverrides({ @AttributeOverride(name = "home", column = @Column(name = "HOME_NUMBER", length = 10)) })
-//	Contact self;
-//
-//	@ElementCollection(fetch = FetchType.EAGER)
-//	@CollectionTable(name = "NICKNAMES", joinColumns = @JoinColumn(name = "PID"))
-//	@Column(name = "NICKNAMES", unique = true)
-//	List<String> nickNames = new ArrayList<>();
-//
-//	@SuppressWarnings("rawtypes")
-//	@ElementCollection(targetClass = Vehicle.class, fetch = FetchType.EAGER)
-//	List vehicles = new ArrayList<>();
-//
-//	@ElementCollection(fetch = FetchType.EAGER)
-//	@CollectionTable(name = "PHONE_NUMBERS")
-//	@MapKeyColumn(name = "TYPE")
-//	@MapKeyEnumerated(EnumType.STRING)
-//	@Column(name = "NUMBER")
-//	Map<PhoneType, String> phoneNumbers = new HashMap<>();
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinTable(
+			name = "P_C_MAPPING",
+			joinColumns = @JoinColumn(name="PID", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name="CID", referencedColumnName = "id")
+			)
 	Set<Car> cars;
 
 	public Long getId() {
